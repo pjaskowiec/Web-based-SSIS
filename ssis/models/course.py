@@ -105,6 +105,7 @@ class Course():
 
     @staticmethod
     def get_coursecode_for(course_name: str = None) -> str:
+        print(course_name)
         query = f'''
                 SELECT code
                 FROM course

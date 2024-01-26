@@ -7,8 +7,6 @@ from . import student
 from math import ceil
 from .utils import (add_student_to_db,
     update_student_record,
-    save_image, 
-    delete_image, 
     check_page_limit,
     check_limit_validity)
 
@@ -117,12 +115,6 @@ def search() -> str:
 @student.route('/students/add', methods=['GET', 'POST'])
 def add() -> str:
     if request.method == 'POST':
-        image = request.files['selected-image']
-        try:
-            cloud_link = save_image(image)
-        except Exception as e:
-            print("Can't save image")
-            print(e)
         
         student = {
             'id': request.form.get('student-id'),
@@ -132,7 +124,6 @@ def add() -> str:
             'gender': request.form.get('gender'),
             'yearlevel': request.form.get('yearlevel'),
             'course': request.form.get('course'),
-            'photo': cloud_link
         }
         added = add_student_to_db(student)
         if added:
@@ -151,38 +142,16 @@ def add() -> str:
 @student.route('/students/update/<string:id>', methods=['GET', 'POST'])
 def update(id: str) -> str:
     if request.method == 'POST':
-        image = request.files['selected-image'+id]
-        cloud_link = ''
-        try:
-            cloud_link = save_image(image)
-        except Exception as e:
-            print("Can't save image")
-            print(e)
-        
-        if cloud_link:
-            student = {
-            'id': id,
-            'firstname': request.form.get('firstname'),
-            'middlename': request.form.get('middlename'),
-            'lastname': request.form.get('lastname'),
-            'gender': request.form.get('gender'),
-            'yearlevel': request.form.get('yearlevel'),
-            'course': request.form.get('course'),
-            'photo' : cloud_link
-            }
-            update_student_record(student)
-        else:
-            student = {
-            'id': id,
-            'firstname': request.form.get('firstname'),
-            'middlename': request.form.get('middlename'),
-            'lastname': request.form.get('lastname'),
-            'gender': request.form.get('gender'),
-            'yearlevel': request.form.get('yearlevel'),
-            'course': request.form.get('course'),
-            'photo' : cloud_link
-            }
-            update_student_record(student)
+        student = {
+        'id': id,
+        'firstname': request.form.get('firstname'),
+        'middlename': request.form.get('middlename'),
+        'lastname': request.form.get('lastname'),
+        'gender': request.form.get('gender'),
+        'yearlevel': request.form.get('yearlevel'),
+        'course': request.form.get('course'),
+        }
+        update_student_record(student)
 
         flash(f"{student['firstname']}'s data has been changed succesfully!", 'info')
         return redirect(url_for('student.students'))
@@ -194,7 +163,6 @@ def update(id: str) -> str:
 @student.route('/students/delete/<string:id>')
 def delete(id: str) -> str:
     data = Student().get_student(id)
-    delete_image(id)
     Student().delete(id)
     flash(f'{data[0]} deleted from the database.', 'info')
     return redirect(url_for('student.students'))

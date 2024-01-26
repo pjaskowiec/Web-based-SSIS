@@ -79,27 +79,12 @@
     {% for student in data[0] %}
         <tr>
             <td><b>{{student.0}}</b></td>
-            {% if student.7 and ('cloudinary.com' not in student.7) %}
-            <td data-bs-toggle="modal" data-bs-target="#student{{student.0}}">
-                <div class="student-table-image-container">
-                    <img class="student-table-image"
-                    src="../static/entity_photos/students/{{student.7}}">
-                </div>
-            </td>
-            {% elif 'cloudinary.com' in student.7 %}
-            <td data-bs-toggle="modal" data-bs-target="#student{{student.0}}">
-                <div class="student-table-image-container">
-                    <img class="student-table-image" src="{{student.7}}">
-                </div>
-            </td>
-            {% else %}
             <td>
                 <div style="width: 50px; height: 50px; border-radius: 50px; display: flex; overflow: hidden;">
                     <img style="display: flex; justify-content: center;" 
                     src="../static/entity_photos/students/student-profile-template.png">
                 </div>
             </td>
-            {% endif %}
             {% if student[2].strip() != '' %}
             <td>{{student.1}} {{student[2][0]}}. {{student.3}}</td>
             {% endif %}
@@ -108,7 +93,7 @@
             {% endif %}
             <td>{{student[4]}}</td>
             <td>{{student[5]}}</td>
-            <td title="{{student.8}}">{{student[6]}}</td>
+            <td title="{{student[6]}}">{{student[6]}}</td>
             <td>
                 <a href="{{url_for('student.update', id=student[0])}}" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#updateStudent{{student[0]}}">Update</a>
                 <a href="{{url_for('student.delete', id=student[0])}}" class="btn btn-danger" onclick="return confirm('Are you sure you want to remove {{student.1}} ?')">Delete</a>
@@ -133,18 +118,6 @@
 
                     <div class="modal-body">
                         <form class="needs-validation" action="{{ url_for('student.update', id=student.0) }}" method="post" enctype="multipart/form-data">
-                            
-                            <div class="image-container flex-column">
-                                <div class="image-wrapper ">
-                                    <div class="image">
-                                        <img id="displayed-image{{student.0}}" src="{{student.7}}">
-                                    </div>
-                                </div>
-                                <div>
-                                  <input type="file" class="form-control" accept="image/png, image/jpeg" id="update-image-inp{{student.0}}"  value="{{student.7}}" name="selected-image{{student.0}}" onchange="updateDisplay()" hidden>
-                                  <button onclick="updateImage('{{student.0}}')" id="custom-btn" type="button">CHOOSE PHOTO</button>
-                                </div>
-                            </div>
 
 
                             <div class="mb-3">
@@ -191,8 +164,8 @@
                             <div class="mb-3">
                                 <label for="course" class="form-label">Course</label>
                                 <select id="course" name="course" class="form-select">
-                                    <option value="{{student.8}}" name="course">{{student.8}}</option>
                                     {% for course in data[1] %}
+                                        {{student[8]}}
                                         {% if course[1] != student[8] %}
                                             <option value="{{course[1]}}" name="course">{{course[1]}}</option>
                                         {% endif %}
@@ -222,14 +195,6 @@
                 </div>
                 <div class="modal-body">
                 <center>
-                    <div class="student-details-image-container">
-                        {% if student.7 and 'cloudinary.com' not in student.7 %}
-                        <img class="student-details-image" src="../static/entity_photos/students/{{student.7}}">
-                        {% elif 'cloudinary.com' in student.7 %}
-                        <img class="student-details-image" src="{{student.7}}">
-                        {% endif %}
-                    </div>
-                    
                     <div class="basic-info">
                         <h2 id="name">{{student[1].upper()}} {{student[3].upper()}}</h2>
                         <h2 id="IDno">#{{student.0}}</h2>

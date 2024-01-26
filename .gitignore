@@ -84,6 +84,7 @@ celerybeat-schedule
 .flaskenv
 
 # virtualenv
+.venv/
 venv/
 ENV/
 

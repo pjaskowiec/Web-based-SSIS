@@ -10,8 +10,7 @@ class Student():
         yearLevel: str = None,
         gender: str = None,
         course: str = None,
-        college: str = None,
-        photo: str = None) -> None:
+        college: str = None) -> None:
         
         self.id = id
         self.firstName = firstName
@@ -21,7 +20,6 @@ class Student():
         self.course = course
         self.college = college
         self.gender = gender
-        self.photo = photo
 
 
     def get_all(self, page_num: int = None, item_per_page: int = None, paginate: bool = True) -> list:
@@ -36,7 +34,6 @@ class Student():
                    gender, 
                    year, 
                    coursecode, 
-                   photo, 
                    course.name, 
                    collegecode, 
                    college.name
@@ -72,7 +69,6 @@ class Student():
                    gender, 
                    year, 
                    coursecode, 
-                   photo, 
                    course.name, 
                    collegecode, 
                    college.name
@@ -180,18 +176,6 @@ class Student():
         return student
 
 
-    @staticmethod
-    def get_image_url(id: str = None) -> str:
-        query = f'''
-            SELECT photo
-            FROM students
-            WHERE id = '{id}'
-        '''
-        cursor.execute(query)
-        image_url = list(cursor.fetchone())
-        return image_url
-        
-
     def add_new(self) -> None:
         query = f'''
             INSERT INTO students (
@@ -202,8 +186,7 @@ class Student():
                 year, 
                 gender, 
                 coursecode, 
-                collegecode,
-                photo)
+                collegecode)
             VALUES (
                 '{self.id}',
                 '{self.firstName}',
@@ -212,8 +195,7 @@ class Student():
                 {self.yearLevel},
                 '{self.gender}',
                 '{self.course}',
-                '{self.college}',
-                '{self.photo}')
+                '{self.college}')
         '''
         cursor.execute(query)
         db.commit()
@@ -232,37 +214,19 @@ class Student():
 
 
     def update(self) -> None:
-        if self.photo:
-            query = f'''
-                UPDATE students
-                SET 
-                    firstname = '{self.firstName}',
-                    middlename = '{self.middleName}',
-                    lastname = '{self.lastName}',
-                    year = {self.yearLevel},
-                    photo = '{self.photo}',
-                    gender = '{self.gender}',
-                    coursecode = '{self.course}',
-                    collegecode = '{self.college}'
-                WHERE
-                    id = '{self.id}'
-            '''
-        else:
-            query = f'''
-                UPDATE students
-                SET 
-                    firstname = '{self.firstName}',
-                    middlename = '{self.middleName}',
-                    lastname = '{self.lastName}',
-                    year = {self.yearLevel},
-                    gender = '{self.gender}',
-                    coursecode = '{self.course}',
-                    collegecode = '{self.college}'
-                WHERE
-                    id = '{self.id}'
-            '''
+        query = f'''
+            UPDATE students
+            SET 
+                firstname = '{self.firstName}',
+                middlename = '{self.middleName}',
+                lastname = '{self.lastName}',
+                year = {self.yearLevel},
+                gender = '{self.gender}',
+                coursecode = '{self.course}',
+                collegecode = '{self.college}'
+            WHERE
+                id = '{self.id}'
+        '''
         cursor.execute(query)
         db.commit()
         return None
-
-
