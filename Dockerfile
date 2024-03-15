@@ -1,11 +1,21 @@
 FROM python:3.11
 
+ARG username
+ARG password
+ARG host
+ARG dbname
+
+ENV username=$username
+ENV password=$password
+ENV host=$host
+ENV dbname=$dbname
+
 WORKDIR /app
 COPY ./requirements.txt ./requirements.txt
+
 RUN pip3 install -r requirements.txt
 COPY . .
-RUN apt-get update -qq && apt-get -y install mariadb-server
-# SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
-# source db_script/script.sql
-# docker run --env-file env.list ubuntu env | grep VAR
-ENTRYPOINT ["flask", "run"]
+
+EXPOSE 8080
+
+ENTRYPOINT ["flask", "run", "--host", "0.0.0.0"]

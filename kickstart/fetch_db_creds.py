@@ -37,9 +37,15 @@ def get_secret():
 def format_secrets_to_env(secrets):
     formatted_string = ""
     for key, value in secrets.items():
-        formatted_string += f'--env {key}={value} '
+        formatted_string += f'--env "{key}={value}" '
     return formatted_string
 
+
+def format_secrets_to_build_args(secrets):
+    formatted_string = ""
+    for key, value in secrets.items():
+        formatted_string += f'--build-arg {key}={value} '
+    return formatted_string
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Optional app description')
@@ -49,6 +55,13 @@ if __name__ == "__main__":
     parser.add_argument(
         '--tag', action='store', 
         required=True, type=str, help='The result image name.')
+    parser.add_argument(
+        '--build', action='store', type=bool, help='The result image name.')
     args = parser.parse_args()
     secrets = get_secret()
-    print(f"docker build {format_secrets_to_env(json.loads(secrets))} {args.image_name}:{args.tag}")
+    if args.build:
+        print(
+            f"docker build --no-cache {format_secrets_to_build_args(json.loads(secrets))} -t {args.image_name}:{args.tag} .")
+    else:
+        print(
+            f"docker run -it {format_secrets_to_env(json.loads(secrets))} {args.image_name}:{args.tag}")
